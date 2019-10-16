@@ -8,10 +8,12 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "./Avatar";
+import SearchBar from "./SearchBar";
 
 const useStyles = makeStyles({
   card: {
-    margin: "5% 25%"
+    margin: "5% 5%",
+    height: "80%"
   }
 });
 
@@ -19,7 +21,7 @@ export default () => {
   const classes = useStyles();
   return (
     <Card className={classes.card}>
-      <CardHeader title="OK, Scott, you're all setup. Now What?" />
+      <CardHeader title="Dashboard" />
       <CardContent>
         <List>
           <ListItem>
@@ -50,8 +52,11 @@ export default () => {
             How We Assess Submissions
           </a>{" "}
           guidelines.
+          
         </Typography>
       </CardContent>
+
+     
     </Card>
   );
 };
