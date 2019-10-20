@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 // import styled from "styled-components"; //cant seem to find this one so commented out for now
 import gql from "graphql-tag";
 import { useQuery, createClient, Provider } from "urql";
-import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Brush } from 'recharts';
 import { LinearProgress } from '@material-ui/core';
 
 const client = createClient({
@@ -50,17 +50,19 @@ const GraphComponent = (props) =>
     </Provider>
   )
 
+
+
 const timestamp = new Date().getTime() - 30000
 
-const QueryMakingComponentThing = (props) =>{
+const QueryMakingComponentThing = ({props}) =>{
   //the code below is an absolute shit storm but works to varying degrees. FUCK!
-  console.log("props.props.selectedMetrics.length > 0", props.props.selectedMetrics.length > 0)
-  console.log(timestamp)
+  // console.log("props.selectedMetrics.length > 0", props.selectedMetrics.length > 0)
+  // console.log(timestamp)
   // debugger
 
-  let metricToGet = props.props.selectedMetrics.length > 0 ? props.props.selectedMetrics[props.props.selectedMetrics.length-1] : "tubingPressure"
+  let metricToGet = props.selectedMetrics.length > 0 ? props.selectedMetrics[props.selectedMetrics.length-1] : "tubingPressure"
 
-  console.log("what our query gonna be?",metricToGet, "what is props?", props)
+  // console.log("what our query gonna be?",metricToGet, "what is props?", props)
   const [result] = useQuery({
     query: maybeBetterQuery,
     variables: {
@@ -78,14 +80,43 @@ const QueryMakingComponentThing = (props) =>{
   if (fetching) return <LinearProgress />;
   //   // const data = [{name: 'Page A', uv: 400, pv: 2400, amt: 2400}, ...];
     const makeChart = (data) => {
+      console.log("makeChart data arg: ", data)
       const ourDataOrSomething = data.getMultipleMeasurements[0].measurements // right now hard-coded grab for data
+      console.log("What is this data?:",ourDataOrSomething)
+      //gotta map this shit cuz unix timestamps are only readable by sick fucks.
+      // metric value unit at
+
+      const fixThisShit = (n) => {
+        //gotta map this shit cuz unix timestamps are only readable by sick fucks.
+        let getReadableDate = new Date(n)
+        let hour = getReadableDate.getHours()
+        let minute = `${getReadableDate.getMinutes() < 10 ? "0":""}${getReadableDate.getMinutes()}`
+        let seconds = `${getReadableDate.getSeconds() < 10 ? "0":""}${getReadableDate.getSeconds()}`
+        // console.log("fix this shit time: ", hour+":"+minute+":"+seconds)
+        return `${hour}:${minute}:${seconds}`
+      }
+      const betterData = ourDataOrSomething.map(measurement => ({
+        "metric": measurement.name,
+        "value": measurement.value,
+        "unit": measurement.unit,
+        "at": fixThisShit(measurement.at)
+      }))
         if(data != null){
           return(
-            <LineChart width={800} height={200} data={ourDataOrSomething}>
+            <LineChart width={800} height={200} margin={{ top: 5, right: 50, bottom: 5, left: 5 }} data={betterData}>
+                <Brush height={10}/>
                 <Line type="monotone" dataKey="value" stroke="#8884d8" />
                 <CartesianGrid stroke="#ccc" />
                 <XAxis dataKey="at"/>
                 <YAxis dataKey="value"/>
+                <Tooltip wrapperStyle={{ width: 150, backgroundColor: '#ccc' }} />
+                {/* {
+                  data.map((id) => {
+                    return (
+                      <Line key={`line_${id}`} dataKey={`${id}_value`} />
+                    )
+                  })
+                } */ /*map over ALL THE DATA and make a new Line for each metric*/} 
             </LineChart>)
         }else{
           return <h3>no valid data</h3>
@@ -102,7 +133,7 @@ const QueryMakingComponentThing = (props) =>{
     
         </div>
         )
-  return "help"
+  return "help" // no please, really. help.
        
 }
 

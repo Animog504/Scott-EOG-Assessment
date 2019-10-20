@@ -14,6 +14,7 @@ import { render } from "react-dom";
 import GraphComponent from "./GraphComponent";
 import Time from "./Time"
 import { useDispatch, useSelector } from "react-redux";
+import CardComponent from "./CardComponent"
 
 // const link = createHttpLink({ uri: "https://react.eogresources.com/graphql" });
 // const cache = new InMemoryCache();
@@ -112,6 +113,7 @@ export default () => {
         <CardHeader title="Dashboard" />
         <SearchBar selectMetric={selectMetric} />
         <GraphComponent selectedMetrics={selectedMetrics}/>
+        <CardComponent selectedMetrics={selectedMetrics}/>
       </Card>
     </Provider>
     
