@@ -13,6 +13,7 @@ import { Provider, createClient, useQuery } from "urql";
 import { render } from "react-dom";
 import GraphComponent from "./GraphComponent";
 import Time from "./Time"
+import { useDispatch, useSelector } from "react-redux";
 
 // const link = createHttpLink({ uri: "https://react.eogresources.com/graphql" });
 // const cache = new InMemoryCache();
@@ -71,6 +72,8 @@ const metricQuery = `query{
 
 
 
+
+
 export default () => {
   // const dispatch = useDispatch();
   // const { temperatureinFahrenheit, description, locationName } = useSelector(
@@ -99,8 +102,8 @@ export default () => {
 
   // if (fetching) return <LinearProgress />;
 
-  
-
+  const selectedMetrics = useSelector(state => state.metrics)
+ 
 
   const classes = useStyles();
   return (
@@ -108,7 +111,7 @@ export default () => {
       <Card className={classes.card}>
         <CardHeader title="Dashboard" />
         <SearchBar selectMetric={selectMetric} />
-        <GraphComponent/>
+        <GraphComponent selectedMetrics={selectedMetrics}/>
       </Card>
     </Provider>
     

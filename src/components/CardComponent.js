@@ -76,20 +76,10 @@ const QueryMakingComponentThing = (props) =>{
 
 
   if (fetching) return <LinearProgress />;
-  //   // const data = [{name: 'Page A', uv: 400, pv: 2400, amt: 2400}, ...];
-    const makeChart = (data) => {
-      const ourDataOrSomething = data.getMultipleMeasurements[0].measurements // right now hard-coded grab for data
-        if(data != null){
-          return(
-            <LineChart width={800} height={200} data={ourDataOrSomething}>
-                <Line type="monotone" dataKey="value" stroke="#8884d8" />
-                <CartesianGrid stroke="#ccc" />
-                <XAxis dataKey="at"/>
-                <YAxis dataKey="value"/>
-            </LineChart>)
-        }else{
-          return <h3>no valid data</h3>
-        }
+ 
+    const makeCard = (data) => {
+        
+        return <h2>some data n shit for a card not available</h2>
         
     }
     
@@ -97,8 +87,8 @@ const QueryMakingComponentThing = (props) =>{
   //   // console.log(data)
     return(
         <div>
-             <h1>Graph Component</h1>
-            <div>{makeChart(data)}</div>
+             <h1>Card Component</h1>
+            <div>{makeCard(data)}</div>
     
         </div>
         )
@@ -106,4 +96,4 @@ const QueryMakingComponentThing = (props) =>{
        
 }
 
-export default GraphComponent
+export default CardComponent

@@ -25,6 +25,7 @@ function SearchBar(props){
 
     const dispatch = useDispatch();
     const selectedMetrics = useSelector(state => state.metrics)
+    // console.log("selectedMetrics:", selectedMetrics)
 
     const { fetching, data, error } = result;
     
