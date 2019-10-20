@@ -9,6 +9,20 @@ import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "./Avatar";
 import SearchBar from "./SearchBar";
+import { Provider, createClient, useQuery } from "urql";
+import { render } from "react-dom";
+import GraphComponent from "./GraphComponent";
+import Time from "./Time"
+
+// const link = createHttpLink({ uri: "https://react.eogresources.com/graphql" });
+// const cache = new InMemoryCache();
+// const client = new ApolloClient({ link, cache });
+
+// not using this for now.
+const client = createClient({
+  url: "https://react.eogresources.com/graphql"
+});
+
 
 const useStyles = makeStyles({
   card: {
@@ -17,46 +31,86 @@ const useStyles = makeStyles({
   }
 });
 
+//-------------------------------------------
+
+const selectMetric = (e) => {
+  //pass back the specific metric and values
+  console.log("myValue: ", e.target.value)
+  // fetchMeasurementData(e.target.value)
+};
+
+// fetchMeasurementData = (measurementType) => {
+  
+// }
+
+const query = `
+query($latLong: WeatherQuery!) {
+  getWeatherForLocation(latLong: $latLong) {
+    description
+    locationName
+    temperatureinCelsius
+  }
+}
+`;
+
+const coolerQuery = `query($metric: String!) {
+  getData: getMultipleMeasurements(input: [{metricName: $metric}])
+      {
+          measurements {
+              metric
+                value
+                unit
+                at
+          }
+      }      
+}`
+
+const metricQuery = `query{
+  getMetrics
+}`
+
+
+
 export default () => {
+  // const dispatch = useDispatch();
+  // const { temperatureinFahrenheit, description, locationName } = useSelector(
+  //   getWeather
+  // );
+
+  // const [result] = useQuery({
+  //   query,
+  //   variables: {
+  //     latLong
+  //   }
+  // });
+  // const { fetching, data, error } = result;
+  // useEffect(
+  //   () => {
+  //     if (error) {
+  //       dispatch({ type: actions.API_ERROR, error: error.message });
+  //       return;
+  //     }
+  //     if (!data) return;
+  //     const { getWeatherForLocation } = data;
+  //     dispatch({ type: actions.WEATHER_DATA_RECEIVED, getWeatherForLocation });
+  //   },
+  //   [dispatch, data, error]
+  // );
+
+  // if (fetching) return <LinearProgress />;
+
+  
+
+
   const classes = useStyles();
   return (
-    <Card className={classes.card}>
-      <CardHeader title="Dashboard" />
-      <CardContent>
-        <List>
-          <ListItem>
-            <Avatar>1</Avatar>
-            <ListItemText primary="Explore the GraphQL API" />
-          </ListItem>
-          <ListItem>
-            <Avatar>2</Avatar>
-            <ListItemText primary="Add ability to select Metrics" />
-          </ListItem>
-          <ListItem>
-            <Avatar>3</Avatar>
-            <ListItemText primary="Display the current metric data" />
-          </ListItem>
-          <ListItem>
-            <Avatar>4</Avatar>
-            <ListItemText primary="Chart historical metric data" />
-          </ListItem>
-          <ListItem>
-            <Avatar>5</Avatar>
-            <ListItemText primary="Submit Your App" />
-          </ListItem>
-        </List>
-
-        <Typography variant="body1">
-          Remember to refer to our{" "}
-          <a href="https://react.eogresources.com/assessing">
-            How We Assess Submissions
-          </a>{" "}
-          guidelines.
-          
-        </Typography>
-      </CardContent>
-
-     
-    </Card>
+    <Provider value={client}>
+      <Card className={classes.card}>
+        <CardHeader title="Dashboard" />
+        <SearchBar selectMetric={selectMetric} />
+        <GraphComponent/>
+      </Card>
+    </Provider>
+    
   );
 };

@@ -4,7 +4,7 @@ const initialState = {
   temperatureinCelsius: null,
   temperatureinFahrenheit: null,
   description: "",
-  locationName: ""
+  locationName: "" 
 };
 
 const toF = c => (c * 9) / 5 + 32;
@@ -34,3 +34,5 @@ export default (state = initialState, action) => {
   if (typeof handler === "undefined") return state;
   return handler(state, action);
 };
+
+

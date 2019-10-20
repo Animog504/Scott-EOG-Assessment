@@ -3,10 +3,15 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import createSagaMiddleware from "redux-saga";
 import sagas from "./sagas";
 import weatherReducer from "./reducers/Weather";
+import timeReducer from "./reducers/Time";
+import metricsReducer from "./reducers/Metrics";
+
 
 export default () => {
   const rootReducer = combineReducers({
-    weather: weatherReducer
+    weather: weatherReducer,
+    time: timeReducer,
+    metrics: metricsReducer
   });
 
   const composeEnhancers = composeWithDevTools({});
@@ -18,3 +23,4 @@ export default () => {
 
   return store;
 };
+ 
