@@ -5,10 +5,6 @@ import { Provider, createClient, useQuery } from "urql";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Chip from "./Chip";
 
-const client = createClient({
-  url: "https://react.eogresources.com/graphql"
-});
-
 const query = `
 query{
     heartBeat
@@ -26,9 +22,7 @@ const getTime = state => {
 export default () => {
     // console.log("client:", client)
   return (
-    <Provider value={client}>
       <Time />
-    </Provider>
   )
 };
 

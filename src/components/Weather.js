@@ -6,10 +6,6 @@ import { useGeolocation } from "react-use";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Chip from "./Chip";
 
-const client = createClient({
-  url: "https://react.eogresources.com/graphql"
-});
-
 const query = `
 query($latLong: WeatherQuery!) {
   getWeatherForLocation(latLong: $latLong) {
@@ -31,9 +27,7 @@ const getWeather = state => {
 
 export default () => {
   return (
-    <Provider value={client}>
       <Weather />
-    </Provider>
   );
 };
 

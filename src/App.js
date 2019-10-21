@@ -7,7 +7,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import "react-toastify/dist/ReactToastify.css";
 import Header from "./components/Header";
 import Wrapper from "./components/Wrapper";
-import NowWhat from "./components/NowWhat";
+import Dashboard from "./components/Dashboard";
 import { SubscriptionClient } from "subscriptions-transport-ws";
 import { Provider as URQLProvider, createClient, useQuery, defaultExchanges, subscriptionExchange, useSubscription } from "urql";
 
@@ -55,9 +55,9 @@ const App = props => (
     <CssBaseline />
     <Provider store={store}>
       <Wrapper>
-        <Header />
         <URQLProvider value={client}>
-          <NowWhat />
+          <Header />
+          <Dashboard />
         </URQLProvider>
         <ToastContainer />
       </Wrapper>

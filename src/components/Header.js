@@ -22,7 +22,7 @@ export default () => {
         <Typography variant="h6" color="inherit" className={classes.grow}>
           {name} EOG React Visualization Assessment
         </Typography>
-        <Time />
+        {/* <Time /> */}
         <Weather />
       </Toolbar>
     </AppBar>

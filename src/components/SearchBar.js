@@ -14,11 +14,6 @@ function SearchBar(props){
     console.log("searchBar Props:",props)
 
 
-
-    const client = createClient({
-      url: "https://react.eogresources.com/graphql"
-    });
-
     const [result] = useQuery({
       query: metricQuery
     });

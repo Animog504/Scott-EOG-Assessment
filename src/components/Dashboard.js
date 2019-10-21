@@ -18,29 +18,11 @@ import CardComponent from "./CardComponent"
 import { SubscriptionClient } from "subscriptions-transport-ws";
 import * as actions from "../store/actions";
 
-const subscriptionClient = new SubscriptionClient(
-  "ws://react.eogresources.com/graphql",
-  {
-    reconnect: true,
-    timeout: 20000
-  }
-);
-
-// not using this for now.
-const client = createClient({
-  url: "https://react.eogresources.com/graphql",
-  exchanges: [
-    ...defaultExchanges,
-    subscriptionExchange({
-      forwardSubscription: operation => subscriptionClient.request(operation)
-    }),
-  ],
-});
 
 const useStyles = makeStyles({
   card: {
-    margin: "5% 5%",
-    height: "80%"
+    margin: "3% 3%",
+    height: "100%"
   }
 });
 

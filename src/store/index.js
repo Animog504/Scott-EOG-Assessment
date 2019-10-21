@@ -5,13 +5,15 @@ import sagas from "./sagas";
 import weatherReducer from "./reducers/Weather";
 import timeReducer from "./reducers/Time";
 import metricsReducer from "./reducers/Metrics";
+import dashboardReducer from "./reducers/Dashboard";
 
 
 export default () => {
   const rootReducer = combineReducers({
     weather: weatherReducer,
     time: timeReducer,
-    metrics: metricsReducer
+    metrics: metricsReducer,
+    dashboard: dashboardReducer
   });
 
   const composeEnhancers = composeWithDevTools({});
