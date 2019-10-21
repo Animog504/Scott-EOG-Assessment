@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Card from "@material-ui/core/Card";
 import CardHeader from "./CardHeader";
 import Typography from "@material-ui/core/Typography";
@@ -9,17 +9,14 @@ import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "./Avatar";
 import SearchBar from "./SearchBar";
-import { Provider, createClient, useQuery, defaultExchanges, subscriptionExchange } from "urql";
+import { Provider, createClient, useQuery, defaultExchanges, subscriptionExchange, useSubscription } from "urql";
 import { render } from "react-dom";
 import GraphComponent from "./GraphComponent";
 import Time from "./Time"
 import { useDispatch, useSelector } from "react-redux";
 import CardComponent from "./CardComponent"
 import { SubscriptionClient } from "subscriptions-transport-ws";
-
-// const link = createHttpLink({ uri: "https://react.eogresources.com/graphql" });
-// const cache = new InMemoryCache();
-// const client = new ApolloClient({ link, cache });
+import * as actions from "../store/actions";
 
 const subscriptionClient = new SubscriptionClient(
   "ws://react.eogresources.com/graphql",
@@ -40,7 +37,6 @@ const client = createClient({
   ],
 });
 
-
 const useStyles = makeStyles({
   card: {
     margin: "5% 5%",
@@ -48,89 +44,50 @@ const useStyles = makeStyles({
   }
 });
 
-//-------------------------------------------
-
-const selectMetric = (e) => {
-  //pass back the specific metric and values
-  console.log("myValue: ", e.target.value)
-  // fetchMeasurementData(e.target.value)
-};
-
-// fetchMeasurementData = (measurementType) => {
-  
-// }
-
-const query = `
-query($latLong: WeatherQuery!) {
-  getWeatherForLocation(latLong: $latLong) {
-    description
-    locationName
-    temperatureinCelsius
+const DataSubscription = `
+subscription DataSubscription{
+	newMeasurement{
+  	value
+  	metric
+    unit
+    at
   }
+}`;
+
+
+const handleDataSubscription = dispatch => (existingData = {}, newData) => {
+
+  if (newData) {
+      existingData[newData.newMeasurement.metric] = newData
+  }
+
+  dispatch({ type: actions.NEW_MEASUREMENT_DATA_RECEIVED, newMeasurement: newData.newMeasurement });
+
 }
-`;
-
-const coolerQuery = `query($metric: String!) {
-  getData: getMultipleMeasurements(input: [{metricName: $metric}])
-      {
-          measurements {
-              metric
-                value
-                unit
-                at
-          }
-      }      
-}`
-
-const metricQuery = `query{
-  getMetrics
-}`
-
-
 
 
 
 export default () => {
-  // const dispatch = useDispatch();
-  // const { temperatureinFahrenheit, description, locationName } = useSelector(
-  //   getWeather
-  // );
-
-  // const [result] = useQuery({
-  //   query,
-  //   variables: {
-  //     latLong
-  //   }
-  // });
-  // const { fetching, data, error } = result;
-  // useEffect(
-  //   () => {
-  //     if (error) {
-  //       dispatch({ type: actions.API_ERROR, error: error.message });
-  //       return;
-  //     }
-  //     if (!data) return;
-  //     const { getWeatherForLocation } = data;
-  //     dispatch({ type: actions.WEATHER_DATA_RECEIVED, getWeatherForLocation });
-  //   },
-  //   [dispatch, data, error]
-  // );
-
-  // if (fetching) return <LinearProgress />;
+  
 
   const selectedMetrics = useSelector(state => state.metrics)
- 
 
   const classes = useStyles();
+
+  const dispatch = useDispatch();
+
+ useSubscription({
+    query: DataSubscription
+  }, handleDataSubscription(dispatch))
+  
+  console.log('Dont rerender')
+  // console.log("NW Data: ",data)
   return (
-    <Provider value={client}>
       <Card className={classes.card}>
         <CardHeader title="Dashboard" />
-        <SearchBar selectMetric={selectMetric} />
+        <SearchBar />
         <GraphComponent selectedMetrics={selectedMetrics}/>
         <CardComponent selectedMetrics={selectedMetrics}/>
       </Card>
-    </Provider>
-    
   );
 };

@@ -43,6 +43,8 @@ query($measurement: String!, $startTime: Timestamp) {
   }
 `;
 
+
+
 const GraphComponent = (props) => 
   (
     <Provider value={client}>
@@ -70,6 +72,7 @@ const QueryMakingComponentThing = ({props}) =>{
       startTime: timestamp
     }
   });
+  console.log("GC result:",result)
   const { fetching, data, error } = result;
 
   //   // const { loading, data } = useQuery(QUERY);
