@@ -1,82 +1,112 @@
 import React, { useState, useEffect } from 'react';
 // import styled from "styled-components"; //cant seem to find this one so commented out for now
 import gql from "graphql-tag";
-import { useQuery, createClient, Provider } from "urql";
+import { useQuery, createClient, Provider, useSubscription } from "urql";
 import Card from '@material-ui/core/Card';
 import { LinearProgress } from '@material-ui/core';
+// import { SubscriptionClient } from 'subscription-transport-ws';
 
-const client = createClient({
-  url: "https://react.eogresources.com/graphql"
-});
+
 
 const getLastMeasurement = `
 query($metricName: String!){
-  getLastKnownMeasurements(metricName: $metricName){
-      measurements {
-        metric
-        value
-        unit
-        at
-      }
-    }    
-  }
-`;
+    getLastKnownMeasurement(metricName: $metricName){
+          metric
+          value
+          unit
+          at
+   }
+  }`;
 
-const CardComponent = ({selectedMetrics}) => 
-  (
-    <Provider value={client}>
-    {
-        //some sort of map over selected Metrics
-    }
-      <MetricCard props={selectedMetrics} />
-    </Provider>
-  )
+const animeSubs = `
+subscription animeSubs{
+	newMeasurement{
+  	value
+  	metric
+    unit
+    at
+  }
+}`;
+
+const CardComponent = ({ selectedMetrics }) =>
+    (
+        selectedMetrics.map(metric => <MetricCard props={metric} />)
+    )
 
 const timestamp = new Date().getTime() - 30000
 
-const MetricCard = ({props}) =>{
-  console.log("CC props:", props)
-  let {metricName} = props
+const MetricCard = ({ props }) => {
 
-  console.log("metricName: ",metricName, "metricValue: "/*,value*/);
+    console.log("CC props:", props)
+    let metricName = props
 
-  const [result] = useQuery({
-    query: getLastMeasurement,
-    variables: {
-        metricName: metricName
+    console.log("metricName: ", metricName, "metricValue: "/*,value*/);
+
+    //   const [result] = useQuery({
+    //     query: getLastMeasurement,
+    //     variables: {
+    //         metricName: metricName
+    //     }
+    //   });
+    //   const [result, executeQuery] = useQuery({
+    //     query: getLastMeasurement,
+    //     variables: { metricName: metricName },
+    //     // refetch ever 5seconds:
+    //     // pollInterval: 1300,  
+    //     // necessary so it updates from network:
+    //     requestPolicy: 'cache-and-network',
+    //   })
+
+    const handleAnimeSubs = (existingData = {}, newData) => {
+        console.log('Existingdata', existingData)
+        // console.log('newData',newData)
+        console.log("newData Metric:", newData.newMeasurement.metric, " vs. metricName: ", metricName)
+        // if(newData.newMeasurement.metric == metricName) 
+        if (newData) {
+            existingData[newData.newMeasurement.metric] = newData
+        }
+        return existingData
+
+
     }
-  });
-  const { fetching, data, error } = result;
 
-  //   // const { loading, data } = useQuery(QUERY);
-  //   console.log(data)
+    const [result] = useSubscription({
+        query: animeSubs
+    }, handleAnimeSubs)
+    console.log("animeSubs result2:", result)
 
+    const { fetching, data, error } = result;
+    
+    console.log("result: ", result)
+    console.log("data: ", data)
+    if (!data || !data[metricName]) return <LinearProgress />;
 
+    const makeCard = ({ newMeasurement }) => {
 
-  if (fetching) return <LinearProgress />;
-  
- 
-    const makeCard = (data) => {
-        console.log("data in card:",data)
-        
+        console.log("data in card:", newMeasurement)
+
         return (
-            <Card width={200}>
-                <h1> something something data </h1>
-            </Card>
+            // <h2>card</h2>
+            <div>
+                <Card>
+                    <h3>{newMeasurement.metric}</h3>
+                    <p>{newMeasurement.value} {newMeasurement.unit}</p>
+                </Card>
+            </div>
         )
     }
-    
 
-  //   // console.log(data)
-    return(
-        <div>
-             <h1>Card Component</h1>
-            <div>{makeCard(data)}</div>
-    
-        </div>
-        )
-  return "help"
-       
+
+    //   // console.log(data)
+    return (
+        <React.Fragment>
+            {makeCard(data[metricName])}
+        </React.Fragment>
+
+
+    )
+    return "help"
+
 }
 
 export default CardComponent

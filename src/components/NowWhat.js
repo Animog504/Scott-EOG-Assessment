@@ -9,20 +9,35 @@ import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "./Avatar";
 import SearchBar from "./SearchBar";
-import { Provider, createClient, useQuery } from "urql";
+import { Provider, createClient, useQuery, defaultExchanges, subscriptionExchange } from "urql";
 import { render } from "react-dom";
 import GraphComponent from "./GraphComponent";
 import Time from "./Time"
 import { useDispatch, useSelector } from "react-redux";
 import CardComponent from "./CardComponent"
+import { SubscriptionClient } from "subscriptions-transport-ws";
 
 // const link = createHttpLink({ uri: "https://react.eogresources.com/graphql" });
 // const cache = new InMemoryCache();
 // const client = new ApolloClient({ link, cache });
 
+const subscriptionClient = new SubscriptionClient(
+  "ws://react.eogresources.com/graphql",
+  {
+    reconnect: true,
+    timeout: 20000
+  }
+);
+
 // not using this for now.
 const client = createClient({
-  url: "https://react.eogresources.com/graphql"
+  url: "https://react.eogresources.com/graphql",
+  exchanges: [
+    ...defaultExchanges,
+    subscriptionExchange({
+      forwardSubscription: operation => subscriptionClient.request(operation)
+    }),
+  ],
 });
 
 
