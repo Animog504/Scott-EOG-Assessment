@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../store/actions";
-import { Provider, createClient, useQuery } from "urql";
+import { useQuery } from "urql";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Chip from "./Chip";
 
@@ -27,7 +27,7 @@ export default () => {
 };
 
 const Time = () => {
-//   console.log("useSelector",useSelector(getTime))
+
   const dispatch = useDispatch();
   
   const { heartBeat, time } = useSelector(
@@ -40,7 +40,7 @@ const Time = () => {
       heartBeat
     }
   });
-  const { fetching, data, error } = result;
+  const { data, error } = result;
   useEffect(
     () => {
       if (error) {

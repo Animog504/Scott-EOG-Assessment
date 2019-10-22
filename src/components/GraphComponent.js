@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import gql from "graphql-tag";
-import { useQuery, createClient, Provider } from "urql";
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Brush, Label } from 'recharts';
+import { useQuery } from "urql";
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Label } from 'recharts';
 import { LinearProgress } from '@material-ui/core';
 import * as actions from "../store/actions";
 
@@ -67,8 +66,9 @@ const QueryMakingComponentThing = ({ props }) => {
       }
       if (!data) return;
       const { getMultipleMeasurements: getMetricData } = data;
+      
       dispatch({ type: actions.METRIC_DATA_RECEIVED, getMetricData, metricToGet });
-    },
+    },// eslint-disable-next-line
     [dispatch, data, error]
   );
 
@@ -86,8 +86,6 @@ const QueryMakingComponentThing = ({ props }) => {
 
       return `${hour}:${minute}:${seconds}`
     }
-
-    let timestamps = ourDataOrSomething.map(measurement => measurement.at)
    
     if (ourDataOrSomething != null && ourDataOrSomething.length) {
       return (

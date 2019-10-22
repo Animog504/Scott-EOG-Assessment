@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useQuery, createClient, Provider } from "urql";
-import { useDispatch, useSelector } from "react-redux";
+import React from 'react';
+import { useQuery } from "urql";
+import { useDispatch } from "react-redux";
 import * as actions from "../store/actions";
 
 
@@ -16,8 +16,7 @@ function SearchBar(props) {
   });
 
   const dispatch = useDispatch();
-  const selectedMetrics = useSelector(state => state.metrics)
-  const { fetching, data, error } = result;
+  const { fetching, data} = result;
 
   return !fetching ? generateDropdown(data) : "loading..."
 

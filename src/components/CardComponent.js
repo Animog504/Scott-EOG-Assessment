@@ -2,11 +2,8 @@ import React from 'react';
 import { useSubscription } from "urql";
 import Card from '@material-ui/core/Card';
 import { LinearProgress } from '@material-ui/core';
-import Avatar from "./Avatar";
 import ListItem from "@material-ui/core/ListItem";
-import { makeStyles } from "@material-ui/core/styles";
-import { spacing } from '@material-ui/system';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch} from "react-redux";
 import * as actions from "../store/actions";
 
 const metricSubscription = `
@@ -24,8 +21,6 @@ const CardComponent = ({ selectedMetrics }) =>
     selectedMetrics.map(metric => <ListItem><MetricCard props={metric} /></ListItem>)
 )//CardComponent - maps over metrics and creates MetricCard's
 
-// const timestamp = new Date().getTime() - 30000
-
 const MetricCard = ({ props }) => {
 
     const dispatch = useDispatch();
@@ -37,13 +32,13 @@ const MetricCard = ({ props }) => {
             existingData[newData.newMeasurement.metric] = newData
         }
         return existingData
-    }
+    }//handlemetricSubscription()
 
     const [result] = useSubscription({
         query: metricSubscription
     }, handlemetricSubscription)
     
-    const { fetching, data, error } = result;
+    const { data } = result;
     
     if (!data || !data[metricName]) return <LinearProgress />;
 
@@ -59,13 +54,13 @@ const MetricCard = ({ props }) => {
                 </Card>
             </div>
         )
-    }
+    }//makeCard()
 
     return (
         <React.Fragment>
             {makeCard(data[metricName])}
         </React.Fragment>
-    )
+    )//return
 }
 
 export default CardComponent

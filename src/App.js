@@ -9,7 +9,7 @@ import Header from "./components/Header";
 import Wrapper from "./components/Wrapper";
 import Dashboard from "./components/Dashboard";
 import { SubscriptionClient } from "subscriptions-transport-ws";
-import { Provider as URQLProvider, createClient, useQuery, defaultExchanges, subscriptionExchange, useSubscription } from "urql";
+import { Provider as URQLProvider, createClient, defaultExchanges, subscriptionExchange } from "urql";
 
 
 
