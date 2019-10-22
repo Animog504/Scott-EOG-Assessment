@@ -16,7 +16,7 @@ function SearchBar(props) {
   });
 
   const dispatch = useDispatch();
-  const { fetching, data} = result;
+  const { fetching, data } = result;
 
   return !fetching ? generateDropdown(data) : "loading..."
 
@@ -27,27 +27,18 @@ function SearchBar(props) {
       options.push({ name: option, value: option })
     })
 
-    
-     
     return (
       <div>
-        {/* <Multiselect options={options} onSelectOptions={([value])=>{
-          dispatch({ type: actions.MEASUREMENT_TYPE_SELECT, metric: value});
-        }}  /> */}
         <select onChange={(e) => {
           dispatch({ type: actions.MEASUREMENT_TYPE_SELECT, metric: e.target.value });
         }}>
+          <option value="none" selected disabled hidden>
+            Select an Option
+          </option>
           {
             data.getMetrics.map(option => <option value={option}>{option}</option>)
           }
-        </select> 
-        
-        {/* <div>
-          Selected Measurements:
-          {
-            selectedMetrics.map(metric => <div>{metric}</div>)
-          }
-        </div> */}
+        </select>
       </div>
     )
   }

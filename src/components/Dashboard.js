@@ -38,7 +38,7 @@ const handleDataSubscription = dispatch => (existingData = {}, newData) => {
 
   dispatch({ type: actions.NEW_MEASUREMENT_DATA_RECEIVED, newMeasurement: newData.newMeasurement });
 
-}
+}//handleDataSubscription
 
 
 
@@ -68,4 +68,4 @@ export default () => {
         </CardContent>
       </Card>
   );
-};
+};//export default()

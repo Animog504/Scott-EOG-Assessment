@@ -20,7 +20,7 @@ query($measurement: String!, $startTime: Timestamp) {
 
 const GraphComponent = (props) =>
   (
-    <QueryMakingComponentThing props={props} />
+    <MakeGraphElement props={props} />
   )
 
 const mapMetricToUnit = {
@@ -44,7 +44,7 @@ const mapMetricToColor = {
 
 const timestamp = new Date().getTime() - 30000
 
-const QueryMakingComponentThing = ({ props }) => {
+const MakeGraphElement = ({ props }) => {
 
   let metricToGet = props.selectedMetrics.length > 0 ? props.selectedMetrics[props.selectedMetrics.length - 1] : ""
 
@@ -72,13 +72,13 @@ const QueryMakingComponentThing = ({ props }) => {
     [dispatch, data, error]
   );
 
-  const ourDataOrSomething = useSelector(state => state.dashboard)
+  const graphData = useSelector(state => state.dashboard)
 
   if (fetching) return <LinearProgress />;
 
   const makeChart = (data) => {
 
-    const fixThisShit = (n) => {
+    const timeStampConvert = (n) => {
       let getReadableDate = new Date(n)
       let hour = getReadableDate.getHours()
       let minute = `${getReadableDate.getMinutes() < 10 ? "0" : ""}${getReadableDate.getMinutes()}`
@@ -87,11 +87,11 @@ const QueryMakingComponentThing = ({ props }) => {
       return `${hour}:${minute}:${seconds}`
     }
    
-    if (ourDataOrSomething != null && ourDataOrSomething.length) {
+    if (graphData != null && graphData.length) {
       return (
-        <LineChart width={800} height={200} margin={{ top: 5, right: 50, bottom: 5, left: 5 }} data={ourDataOrSomething}>
+        <LineChart width={800} height={200} margin={{ top: 5, right: 50, bottom: 5, left: 5 }} data={graphData}>
           <CartesianGrid stroke="#ccc" />
-          <XAxis dataKey="at" tickFormatter={fixThisShit} key={ourDataOrSomething[ourDataOrSomething.length - 1].at} />
+          <XAxis dataKey="at" tickFormatter={timeStampConvert} key={graphData[graphData.length - 1].at} />
           <Tooltip wrapperStyle={{ width: 150, backgroundColor: '#ccc' }} />
           {
             props.selectedMetrics.map((metric) => {
