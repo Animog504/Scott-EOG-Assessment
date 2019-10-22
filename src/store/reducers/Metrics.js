@@ -4,8 +4,11 @@ const initialState = []
 
 const metricSelected = (state, action) => ([...state, action.metric])
 
+const removeMetric = (state, action) => (state.filter((metric)=> metric != action.metric))
+
 const handlers = {
-    [actions.MEASUREMENT_TYPE_SELECT]: metricSelected
+    [actions.MEASUREMENT_TYPE_SELECT]: metricSelected,
+    [actions.REMOVE_MEASUREMENT]: removeMetric
   };
   
 export default (state = initialState, action) => {

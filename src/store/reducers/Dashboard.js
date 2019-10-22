@@ -5,20 +5,12 @@ const initialState = [];
 
 
 const newMeasurementDataReceived = (state, action) => {
-  console.log("alsdkjfalksdfjlaksjdflkaj",action)
-  // const { getTime } = action;
-  const { newMeasurement } = action
-  
-  // let existingMetrics  = state[newMeasurement.metric] || []
-  // return {
-  //   ...state,
-  //   [newMeasurement.metric]: [ ...existingMetrics.slice(1), newMeasurement ]
-  // };
 
+  const { newMeasurement } = action
   const newState = [...state]
   const newDataPoint = newMeasurement
-
   const existingDataPointWithSameTimestamp = newState.find(existingDataPoint => existingDataPoint.at === newDataPoint.at)
+
   if (existingDataPointWithSameTimestamp) {
     existingDataPointWithSameTimestamp[newMeasurement.metric] = newDataPoint.value
   } else {
@@ -28,7 +20,6 @@ const newMeasurementDataReceived = (state, action) => {
 };
 
 const metricDataReceived = (state, action) => {
-  // console.log("jalskjdflakjsdlfakjsdfjafdjajflaskjdflasjdflakjsdlfkasdfjaf", action)
 
   const { metricToGet, getMetricData } = action
   const newState = [...state]
@@ -36,20 +27,13 @@ const metricDataReceived = (state, action) => {
   
   actualDataThoughForReal.forEach(newDataPoint => {
     const existingDataPointWithSameTimestamp = newState.find(existingDataPoint => existingDataPoint.at === newDataPoint.at)
-    if (existingDataPointWithSameTimestamp) {
+    if (existingDataPointWithSameTimestamp){
       existingDataPointWithSameTimestamp[metricToGet] = newDataPoint.value
-    } else {
+    }else{
       newState.push({at: newDataPoint.at, [metricToGet]: newDataPoint.value})
     }
   })
   return newState
-
-  // return [
-  //   // {...state,
-  //   // [metricToGet]: getMetricData[0].measurements}
-  //   ...state
-  // ]
-  
 }
 
 const handlers = {
